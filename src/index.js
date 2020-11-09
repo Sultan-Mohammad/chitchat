@@ -13,11 +13,24 @@ const publicDirectoryPath = path.join(__dirname, '../public');
 
 app.use(express.static(publicDirectoryPath));
 
+let count = 0;
+
 io.on('connection', (socket) => {
     console.log('a user connected');
+    
     socket.on('disconnect', () => {
-      console.log('user disconnected');
+      io.emit('sendToAll', "A user has left");
     });
+
+    socket.on('sendMessage', (msg) => {
+      io.emit('sendToAll', msg);
+    });
+
+    socket.broadcast.emit('sendToAll', "A new user has joined")
+
+    socket.on('sendLocation', (pos) => {
+      socket.broadcast.emit('sendToAll', `https://google.com/maps?q=${pos.latitude},${pos.longitude}`);
+    })
   });
 
 server.listen(port, () => {
