@@ -14,6 +14,9 @@ const $messages = document.querySelector('#messages');
 const messageTemplate = document.querySelector("#message-template").innerHTML;
 const loactionTemplate = document.querySelector("#location-template").innerHTML;
 
+// Options
+const {username, room} = Qs.parse(location.search, {ignoreQueryPrefix: true});
+
 $chatForm.addEventListener('submit', (e) => {
     e.preventDefault();
     $chatSendBtn.setAttribute('disabled', 'disabled');
@@ -29,6 +32,14 @@ $chatForm.addEventListener('submit', (e) => {
         console.log('Delivered!', msg);
     });
 });
+
+socket.on('sendMessage', message => {
+    const html = Mustache.render(messageTemplate, {
+        message: message.text,
+        createdAt: moment(message.createdAt).format('hh:mm:ss a')
+    });
+    $messages.insertAdjacentHTML('beforeend',html);
+})
 
 socket.on('sendToAll', message => {
     const html = Mustache.render(messageTemplate, {
@@ -63,3 +74,5 @@ socket.on('sendLocationToAll', location => {
     });
     $messages.insertAdjacentHTML('beforeend', html);
 })
+
+socket.emit('join', {username, room});

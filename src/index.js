@@ -22,20 +22,24 @@ io.on('connection', (socket) => {
       io.emit('sendToAll', generateMessage("A user has left"));
     });
 
+    socket.on('join', ({username, room}) => {
+      socket.join(room);
+      socket.emit('sendMessage', generateMessage('Welcome'));
+      socket.to(room).broadcast.emit('sendToAll', generateMessage(`${username} has joined`));
+    })
+
     socket.on('sendMessage', (msg, callback) => {
       const filter = new Filter();
 
       if (filter.isProfane(msg)) {
         return callback('Profanity is not allowed');
       }
-      io.emit('sendToAll', generateMessage(msg));
+      io.to('').emit('sendToAll', generateMessage(msg));
       callback(generateMessage('Recieved!'));
     });
 
-    socket.broadcast.emit('sendToAll', generateMessage("A new user has joined"))
-
     socket.on('sendLocation', (pos, callback) => {
-      socket.emit('sendLocationToAll', generateLocationMessage(`https://google.com/maps?q=${pos.latitude},${pos.longitude}`));
+      io.to('').emit('sendLocationToAll', generateLocationMessage(`https://google.com/maps?q=${pos.latitude},${pos.longitude}`));
       callback();
     });
     
