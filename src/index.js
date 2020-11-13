@@ -3,6 +3,7 @@ const path = require('path');
 const http = require('http');
 const socketIO = require('socket.io');
 const Filter = require('bad-words');
+const { generateMessage, generateLocationMessage } = require('./utils/messages');
 
 const app = express();
 const server = http.createServer(app);
@@ -15,10 +16,10 @@ const publicDirectoryPath = path.join(__dirname, '../public');
 app.use(express.static(publicDirectoryPath));
 
 io.on('connection', (socket) => {
-    console.log('a user connected');
+    console.log(generateMessage('a user connected'));
     
     socket.on('disconnect', () => {
-      io.emit('sendToAll', "A user has left");
+      io.emit('sendToAll', generateMessage("A user has left"));
     });
 
     socket.on('sendMessage', (msg, callback) => {
@@ -27,14 +28,14 @@ io.on('connection', (socket) => {
       if (filter.isProfane(msg)) {
         return callback('Profanity is not allowed');
       }
-      io.emit('sendToAll', msg);
-      callback('Recieved!');
+      io.emit('sendToAll', generateMessage(msg));
+      callback(generateMessage('Recieved!'));
     });
 
-    socket.broadcast.emit('sendToAll', "A new user has joined")
+    socket.broadcast.emit('sendToAll', generateMessage("A new user has joined"))
 
     socket.on('sendLocation', (pos, callback) => {
-      socket.broadcast.emit('sendToAll', `https://google.com/maps?q=${pos.latitude},${pos.longitude}`);
+      socket.emit('sendLocationToAll', generateLocationMessage(`https://google.com/maps?q=${pos.latitude},${pos.longitude}`));
       callback();
     });
     

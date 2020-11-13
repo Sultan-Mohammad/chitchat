@@ -5,20 +5,23 @@
     <meta charset='utf-8'>
     <title>Chit Chat</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
-    
+    <link rel="icon" href="/img/favicon.png" >
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 
 <body>
-    <h2>Chat App</h2>
-    <form id="messageForm">
-        <input type="text" placeholder="Type you message here" name="message">
-        <button name="sendBtn">Send</button>
-    </form>
-    <button id="btnLocation">Send Location</button>
-
-
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="/js/chat.js"></script>
+    <div class="centered-form">
+        <div class="centered-form__box">
+            <h1>Join</h1>
+            <form action="/chat.html">
+                <label>Display Name</label>
+                <input type="text" name="username" placeholder="Display name" required/>
+                <label>Room</label>
+                <input type="text" name="room" placeholder="Room" required/>
+                <button>Join</button>
+            </form>
+        </div>
+    </div>
 </body>
 
 </html>

@@ -7,6 +7,12 @@ socket.on('welcome', (msg)=> {
 const $chatForm = document.getElementById("messageForm");
 const $chatTextBox = $chatForm.elements.message;
 const $chatSendBtn = $chatForm.elements.sendBtn;
+const $messages = document.querySelector('#messages');
+
+//Templates
+
+const messageTemplate = document.querySelector("#message-template").innerHTML;
+const loactionTemplate = document.querySelector("#location-template").innerHTML;
 
 $chatForm.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -24,8 +30,12 @@ $chatForm.addEventListener('submit', (e) => {
     });
 });
 
-socket.on('sendToAll', msg => {
-    console.log(msg)
+socket.on('sendToAll', message => {
+    const html = Mustache.render(messageTemplate, {
+        message: message.text,
+        createdAt: moment(message.createdAt).format('hh:mm:ss a')
+    });
+    $messages.insertAdjacentHTML('beforeend',html);
 });
 
 const $sendLocationBtn = document.getElementById('btnLocation');
@@ -45,3 +55,11 @@ $sendLocationBtn.addEventListener('click', (e)=> {
         });
     })
 });
+
+socket.on('sendLocationToAll', location => {
+    const html = Mustache.render(loactionTemplate, {
+        location : location.url,
+        createdAt: moment(location.createdAt).format('hh:mm:ss a')
+    });
+    $messages.insertAdjacentHTML('beforeend', html);
+})
