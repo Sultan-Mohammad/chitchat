@@ -1,7 +1,7 @@
 const socket = io();
 
 socket.on('welcome', (msg)=> {
-    console.log(msg);
+
 });
 
 const $chatForm = document.getElementById("messageForm");
@@ -53,9 +53,8 @@ $chatForm.addEventListener('submit', (e) => {
         $chatTextBox.value= '';
         $chatTextBox.focus();
         if (msg) {
-            return console.log(msg);
+            return;
         }
-        console.log('Delivered!', msg);
     });
 });
 
@@ -90,7 +89,6 @@ $sendLocationBtn.addEventListener('click', (e)=> {
             latitude: position.coords.latitude
         }, ()=> {
             $sendLocationBtn.removeAttribute('disabled');
-            console.log('Location shared!');
         });
     })
 });
