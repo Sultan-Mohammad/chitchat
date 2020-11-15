@@ -32,12 +32,31 @@ const addUser = ({id, username, room}) => {
     return { user };
 }
 
-const removUser = (userId) => {
+const removeUser = (userId) => {
     const index = users.findIndex(user => {
         return user.id === userId
     });
 
-    if (user!== -1) {
+    if (index!== -1) {
         return users.splice(index, 1)[0];
     }
+}
+
+const getUser = (userId) => {
+    const user = users.find(user => {
+        return user.id === userId;
+    });
+
+    return user;
+};
+
+const getUsersInRoom = (room) => {
+    return users.filter(user => user.room === room);
+}
+
+module.exports = {
+    addUser,
+    removeUser,
+    getUser,
+    getUsersInRoom
 }
