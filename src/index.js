@@ -37,7 +37,7 @@ io.on('connection', (socket) => {
       }
 
       socket.join(user.room);
-      socket.emit('sendMessage', generateMessage('Welcome'));
+      socket.emit('sendMessage', generateMessage(user.room,`Welcome to ${user.room}`,));
       socket.to(user.room).broadcast.emit('sendToAll', generateMessage('System',`${user.username} has joined`));
       io.to(user.room).emit('roomData', {
         room: user.room,
